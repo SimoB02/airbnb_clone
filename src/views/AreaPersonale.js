@@ -1,84 +1,171 @@
-import React from "react";
+import React, { useState } from "react";
+import { Container, Grid, Typography, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
 import { styled } from "@mui/system";
-import { Box, Typography, dividerClasses } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import PersonIcon from "@mui/icons-material/Person";
-import { pink, grey } from "@mui/material/colors";
-import logo from "../assets/logo.png";
+import LockIcon from "@mui/icons-material/Lock";
+import EmailIcon from "@mui/icons-material/Email";
+
+import userAvatar from "../assets/logo.png";
+import axios from "axios";
+import { Link } from "react-router-dom";
+
+
+const PersonalAreaContainer = styled(Container)({
+  fontWeight: "bold",
+  paddingTop: 50,
+});
+
+const SectionTitle = styled(Typography)({
+  fontWeight: "bold",
+  fontSize: 24,
+  marginBottom: 32,
+});
+
+const ProfileSection = styled(Grid)({
+  display: "flex",
+  alignItems: "center",
+  gap: 16,
+  marginBottom: 32,
+});
+
+const ProfileAvatar = styled(Avatar)({
+  width: 100,
+  height: 100,
+});
+
+const ProfileDetails = styled(Grid)({});
+
+const ProfileDetailItem = styled(Grid)({
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+  marginBottom: 8,
+});
+
+const DetailIcon = styled("div")({
+  backgroundColor: grey[400],
+  color: "white",
+  width: 24,
+  height: 24,
+  borderRadius: "50%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+});
 
 const PersonalArea = () => {
-  const PersonalAreaContainer = styled(Box)({
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-    background: "linear-gradient(135deg, #f5f5f5 0%, #fff 100%)",
-  });
+  const [openDialog, setOpenDialog] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
-  
-  const ContentContainer = styled(Box)({
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "16px",
-  });
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
 
-  const LogoWrapper = styled(Box)({
-    position: "absolute",
-    top: "16px",
-    right: "16px",
-    display: "flex",
-    alignItems: "center",
-  });
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
-  const Logo = styled("img")({
-    height: "48px",
-    marginRight: "8px",
-  });
+  const handleSaveChanges = () => {
+    const data = {
+      username: username,
+      password: password,
+      email: email,
+    };
 
-  const SideMenu = styled(Box)({
-    display: "flex",
-    flexDirection: "column",
-    gap: "16px",
-    backgroundColor: grey[100],
-    borderRadius: "4px",
-    padding: "16px",
-  });
-
-  const MenuItem = styled(Typography)(({ highlighted }) => ({
-    color: highlighted ? pink[500] : "inherit",
-    cursor: "pointer",
-  }));
+    axios
+      .put("http://198.18.194.22:4000/api/user/login", data)
+      .then((response) => {
+        console.log("Risposta dalla richiesta PUT:", response.data);
+        handleCloseDialog();
+      })
+      .catch((error) => {
+        console.error("Errore durante la richiesta PUT:", error);
+      });
+  };
 
   return (
     <PersonalAreaContainer>
-      <LogoWrapper>
-        <Logo src={logo} alt="Airbnb" />
-        <Typography variant="h6" component="span">
-          Area personale
-        </Typography>
-      </LogoWrapper>
-      <ContentContainer>
-        <PersonIcon sx={{ fontSize: 128, color: pink[200] }} />
-        <Box sx={{ textAlign: "center" }}>
-          <Typography variant="body1">
-            <strong>Username:</strong> da fare
-          </Typography>
-          <Typography variant="body1">
-            <strong>Password:</strong> ********
-          </Typography>
-          <Typography variant="body1">
-            <strong>Email:</strong> da fare
-          </Typography>
-        </Box>
-      </ContentContainer>
-      <SideMenu>
-        <MenuItem variant="body1" highlighted>
-          Area personale
-        </MenuItem>
-        <MenuItem variant="body1">Accedi</MenuItem>
-        <MenuItem variant="body1">Registrati</MenuItem>
-        <MenuItem variant="body1">Scopri di più</MenuItem>
-      </SideMenu>
+      <Typography variant="h1" align="center" gutterBottom>
+        Benvenuto sulla tua area personale!
+      </Typography>
+      <SectionTitle>Profilo utente</SectionTitle>
+      <ProfileSection>
+        <ProfileAvatar>
+          <Avatar src={userAvatar} alt="User Avatar" />
+        </ProfileAvatar>
+        <ProfileDetails>
+          <ProfileDetailItem>
+            <DetailIcon>
+              <PersonIcon fontSize="small" />
+            </DetailIcon>
+            <Typography variant="body1">Username: {username}</Typography>
+          </ProfileDetailItem>
+          <ProfileDetailItem>
+            <DetailIcon>
+              <LockIcon fontSize="small" />
+            </DetailIcon>
+            <Typography variant="body1">Password: ********</Typography>
+          </ProfileDetailItem>
+          <ProfileDetailItem>
+            <DetailIcon>
+              <EmailIcon fontSize="small" />
+            </DetailIcon>
+            <Typography variant="body1">Email: {email}</Typography>
+          </ProfileDetailItem>
+        </ProfileDetails>
+      </ProfileSection>
+      <SectionTitle>Azioni account</SectionTitle>
+      <Grid container justifyContent="center" spacing={2}>
+        <Grid item>
+          <Button variant="contained" size="large" onClick={handleOpenDialog}>
+            Modifica le tue credenziali
+          </Button>
+        </Grid>
+        <Grid item>
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <Button variant="contained" size="large">
+            Esci
+          </Button>
+          </Link>
+        </Grid>
+      </Grid>
+
+      {/* Pop-up per la modifica */}
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Modifica credenziali</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Annulla</Button>
+          <Button onClick={handleSaveChanges} color="primary">
+            Salva
+          </Button>
+        </DialogActions>
+      </Dialog>
     </PersonalAreaContainer>
   );
 };
