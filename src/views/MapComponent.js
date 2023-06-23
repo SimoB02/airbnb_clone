@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
 
-const MapComponent = ({ google }) => {
+  const MapComponent = ({ google }) => {
   const [apartments, setApartments] = useState([]);
   const [selectedApartment, setSelectedApartment] = useState(null);
 
@@ -23,6 +23,8 @@ const MapComponent = ({ google }) => {
         { id: 2, name: 'Appartamento 2', lat: 37.7891, lng: -122.4089 },
         { id: 3, name: 'Appartamento 3', lat: 37.7859, lng: -122.4082 },
         { id: 4, name: 'Appartamento 4', lat: 37.7800, lng: -122.4032 },
+        { id: 5, name: 'Appartamento 5', lat: 37.7259, lng: -122.4082 },
+        { id: 6, name: 'Appartamento 6', lat: 37.7900, lng: -122.4032 },
       ];
       resolve(apartmentsData);
     });
@@ -64,7 +66,7 @@ const MapComponent = ({ google }) => {
         >
           <div>
             <h4>{selectedApartment.name}</h4>
-            {<p> Descrizione appartamento.......</p>}
+            {<p> Da collegare con le cards degli appartamenti + descrizione ecc.... </p>}
           </div>
         </InfoWindow>
       )}
@@ -73,5 +75,5 @@ const MapComponent = ({ google }) => {
 };
 
 export default GoogleApiWrapper({
-  apiKey: '/',
+  apiKey: process.env.GOOGLE_API_KEY,
 })(MapComponent);
