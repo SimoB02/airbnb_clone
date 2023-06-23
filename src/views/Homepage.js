@@ -32,7 +32,7 @@ function Homepage() {
             overflowY: "scroll",
           }}
         >
-          {/* Il componente qua sotto delle cards va mostrato in seguito alla chiamata al server  */}
+          {/* Va mostrato in seguito alla chiamata al server (sono le cards) */}
           <Container maxWidth="xl" sx={{ mb: 3 }}>
             <Locationcards />
           </Container>

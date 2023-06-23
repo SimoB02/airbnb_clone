@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
+
 const FormContainer = styled("div")({
   display: "flex",
   flexDirection: "column",
@@ -37,12 +38,12 @@ const Registrazione = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://198.18.192.223:3000/api/user/register", data
+        "http://16.171.41.207:3000/api/user/register", data
       );
       if (response.data) {
         
         setRegistrationSuccess(true);
-        setLink(response.data.url);
+        setLink(response.data.index);
       }
       console.log(response.data);
     } catch (e) {
@@ -54,7 +55,7 @@ const Registrazione = () => {
 
   const postData = async () => {
     try {
-      const response = await axios.post(link);
+      const response = await axios.post("http://16.171.41.207:3000/api/user/authy/"  + link);
       console.log(registrationSuccess);
       return response.data;
     } catch (error) {

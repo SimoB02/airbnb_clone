@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect,  } from "react";
 import { Container, Grid, Typography, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
 import { styled } from "@mui/system";
 import { grey } from "@mui/material/colors";
@@ -56,9 +56,9 @@ const DetailIcon = styled("div")({
 
 const PersonalArea = () => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  
+  const [userData, setUserData] = useState(null);
+
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -68,23 +68,51 @@ const PersonalArea = () => {
     setOpenDialog(false);
   };
 
-  const handleSaveChanges = () => {
+  /*const handleSaveChanges = () => {
     const data = {
       username: username,
       password: password,
       email: email,
-    };
+    }; 
 
     axios
-      .put("http://198.18.194.22:4000/api/user/login", data)
+      .put 
+      ("http://16.171.41.207:3000/api/profile/update", data)
       .then((response) => {
         console.log("Risposta dalla richiesta PUT:", response.data);
         handleCloseDialog();
+
+        localStorage.setItem("token", response.data.token);
       })
       .catch((error) => {
         console.error("Errore durante la richiesta PUT:", error);
       });
   };
+
+  */
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://16.171.41.207:3000/api/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUserData(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
+  console.log(userData)
+  
+  
 
   return (
     <PersonalAreaContainer>
@@ -101,7 +129,7 @@ const PersonalArea = () => {
             <DetailIcon>
               <PersonIcon fontSize="small" />
             </DetailIcon>
-            <Typography variant="body1">Username: {username}</Typography>
+            <Typography variant="body1">Username: {/* */}</Typography>
           </ProfileDetailItem>
           <ProfileDetailItem>
             <DetailIcon>
@@ -113,7 +141,7 @@ const PersonalArea = () => {
             <DetailIcon>
               <EmailIcon fontSize="small" />
             </DetailIcon>
-            <Typography variant="body1">Email: {email}</Typography>
+            <Typography variant="body1">Email: {userData != null && userData.email}</Typography>
           </ProfileDetailItem>
         </ProfileDetails>
       </ProfileSection>
@@ -133,8 +161,8 @@ const PersonalArea = () => {
         </Grid>
       </Grid>
 
-      {/* Pop-up per la modifica */}
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
+      {/* Pop-up per la modifica */} 
+      {/* <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Modifica credenziali</DialogTitle>
         <DialogContent>
           <TextField
@@ -165,7 +193,7 @@ const PersonalArea = () => {
             Salva
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </PersonalAreaContainer>
   );
 };

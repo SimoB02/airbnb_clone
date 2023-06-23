@@ -12,7 +12,7 @@ const Locationcards = () => {
 
   async function getCards() {
     try {
-      const response = await axios.get("http://localhost:3001/Mock-Data");
+      const response = await axios.get("http://localhost:3000/Mock-Data");
       setData(response.data);
     } catch (error) {
       console.error(error);

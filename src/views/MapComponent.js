@@ -73,5 +73,5 @@ const MapComponent = ({ google }) => {
 };
 
 export default GoogleApiWrapper({
-  apiKey: 'AIzaSyBjV5ZVXC2q0RzGFb9h_GV535mAB2H9ocg',
+  apiKey: '/',
 })(MapComponent);

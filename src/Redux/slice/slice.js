@@ -7,10 +7,10 @@ const initialState = {
     },
     user:{
   name:"user",
-  isAuthenticated:true
+  isAuthenticated: true,
 },
-}
 
+}
 
 const userSlice = createSlice({
   name: "user",
@@ -21,6 +21,8 @@ const userSlice = createSlice({
   }, 
   }  
 });
+
+
 
 export const {
       setIsFetching,

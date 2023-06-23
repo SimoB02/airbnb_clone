@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
+import {useNavigate} from "react-router-dom";
+
 const FormContainer = styled("div")({
   display: "flex",
   flexDirection: "column",
@@ -37,16 +39,14 @@ const LoginForm = () => {
   } = useForm();
 
   const [loginSucces, setLoginSuccess] = useState(false);
-  const [/*token*/, setToken] = useState("");
+  const [token, setToken] = useState("");
 
-  const redirectToPage4 = () => {
-    window.location.href = "/AreaPersonale";
-  };
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://198.18.192.223:3000/api/user/login",
+        "http://16.171.41.207:3000/api/user/login",
         data
       );
 
@@ -58,9 +58,11 @@ const LoginForm = () => {
 
         // inserimento del token nel locale storage
         localStorage.setItem("token", response.data.token);
-        console.log(response.data.token)
+        console.log(response.data.token);
 
-        redirectToPage4();
+        //redirect to the page of areapersonale
+        navigate("/areapersonale") ;
+        
       }
     } catch (e) {
       console.log(e);
@@ -97,7 +99,7 @@ const LoginForm = () => {
             error={errors.password ? true : false}
             helperText={
               errors.password
-                ? "Password is required and must be at least 4 characters long"
+                ? "Sono necessari almeno 6 caratteri"
                 : ""
             }
           />
