@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
+import {Link} from "react-router-dom";
 
 const FormContainer = styled("div")({
   display: "flex",
@@ -23,7 +24,7 @@ const Form = styled("form")({
   borderRadius: "4px",
   backgroundColor: "#f5f5f5",
 });
-
+ 
 const Registrazione = () => {
   const {
     register,
@@ -32,32 +33,32 @@ const Registrazione = () => {
   } = useForm();
 
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
-  const [link, setLink] = useState("")
+  let [link, setLink] = useState("")
 
-  
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
         "http://16.171.41.207:3000/api/user/register", data
       );
       if (response.data) {
-        
         setRegistrationSuccess(true);
-        setLink(response.data.index);
+        setLink(response.data.index) ;
       }
+
       console.log(response.data);
+      console.log(response.data.index);
+
     } catch (e) {
       console.log(e);
     }
   };
-
   
-
   const postData = async () => {
     try {
-      const response = await axios.post("http://16.171.41.207:3000/api/user/authy/"  + link);
+      const response = await axios.post("http://16.171.41.207:3000/api/user/authy/"+ link);
       console.log(registrationSuccess);
-      return response.data;
+      return response.data 
+      
     } catch (error) {
       console.error(error);
       throw error;
@@ -65,13 +66,14 @@ const Registrazione = () => {
   };
 
 
-
   return (
     <Box>
       {registrationSuccess && (
         <Box>
           <p>Registrazione avvenuta con successo</p>
+          <Link  to={"/login"}>
           <Button onClick={postData}>Verifica il tuo account</Button>
+          </Link>
         </Box>
       )}
 
@@ -115,7 +117,6 @@ const Registrazione = () => {
           </Button>
         </Form>
       </FormContainer>
-
       
     </Box>
   );

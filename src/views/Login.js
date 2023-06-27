@@ -30,7 +30,6 @@ const SubmitButton = styled(Button)({
   color: "#fff",
 });
 
-
 const LoginForm = () => {
   const {
     register,

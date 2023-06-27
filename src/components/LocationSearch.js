@@ -12,13 +12,11 @@ import { pink } from '@mui/material/colors';
 
 // Nella documentazione material --> stack --> dividers 
 
-
 const choices = [
     { id: 1, text: 'Ovunque' },
     { id: 2, text: 'Qualunque settimana' },
     { id: 3, text: 'Aggiungi ospiti', withIcon: true },
   ];
-
 
 const LocationSearch = () => {
     return (

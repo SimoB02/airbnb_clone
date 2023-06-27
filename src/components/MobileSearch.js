@@ -11,7 +11,7 @@ import axios from "axios";
 
 const handleButtonClick = () => {
   axios
-    .get("http://localhost:3001")
+    .get("http://localhost:3000")
     .then((response) => {
       console.log(response);
     })

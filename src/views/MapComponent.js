@@ -1,79 +1,97 @@
-import React, { useState, useEffect } from 'react';
-import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
+import React from 'react'
+import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import {useState, useEffect} from "react";
 
-  const MapComponent = ({ google }) => {
-  const [apartments, setApartments] = useState([]);
-  const [selectedApartment, setSelectedApartment] = useState(null);
+import axios from "axios";
 
-  useEffect(() => {
-    const fetchApartments = async () => {
-      // Simula il caricamento dei dati degli appartamenti
-      const response = await fetchApartmentsData();
-      setApartments(response);
-    };
+//import api 
+const apiKey = process.env.GOOGLE_API_KEY
 
-    fetchApartments();
-  }, []);
+const containerStyle = {
+  width: '800px',
+  height: '800px'
+};
 
-  const fetchApartmentsData = () => {
-    // non fetcha ma è simulato avendo i dati degli appartamenti nella costante 
-    return new Promise((resolve) => {
-      const apartmentsData = [
-        { id: 1, name: 'Appartamento 1', lat: 37.7749, lng: -122.4194 },
-        { id: 2, name: 'Appartamento 2', lat: 37.7891, lng: -122.4089 },
-        { id: 3, name: 'Appartamento 3', lat: 37.7859, lng: -122.4082 },
-        { id: 4, name: 'Appartamento 4', lat: 37.7800, lng: -122.4032 },
-        { id: 5, name: 'Appartamento 5', lat: 37.7259, lng: -122.4082 },
-        { id: 6, name: 'Appartamento 6', lat: 37.7900, lng: -122.4032 },
-      ];
-      resolve(apartmentsData);
-    });
-  };
+const center = {
+  lat: -3.745,
+  lng: -38.523
+};
 
-  const onMarkerClick = (apartment) => {
-    setSelectedApartment(apartment);
-  };
+function MapComponent( {google}) {
 
-  const mapStyles = {
-    width: '100%',
-    height: '100%',
-  };
+    const [apartments, setApartments] = useState([]);
+    const [selectedApartment, setSelectedApartment] = useState();
+    
+    //infoWindows gestione 
+    const [infoWindowVisible, setInfoWindowVisible] = useState(false);
 
+    useEffect(() => {
+        const fetchApartments = async () => {
+          try {
+            const response = await axios.get('http://localhost:3000/Mock');
+           
+            setApartments(response.data);
+          } catch (error) {
+            console.error('Errore durante il recupero dei dati degli appartamenti', error);
+          }
+        };
+    
+        fetchApartments();
+      }, []);
+
+      useEffect(() => {
+        console.log(selectedApartment)    
+      })
+
+      // gestione delle infowindows 
+      const onMarkerClick = (apartment) => {
+        setSelectedApartment(apartment);
+        setInfoWindowVisible(true);
+      };
+      
+    
   return (
-    <Map
-      google={google}
-      zoom={14}
-      style={mapStyles}
-      initialCenter={{ lat: 37.7749, lng: -122.4194 }}
+    <LoadScript
+      googleMapsApiKey= {apiKey}
     >
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={10}
+      >
+         
       {apartments.map((apartment) => (
         <Marker
           key={apartment.id}
           position={{ lat: apartment.lat, lng: apartment.lng }}
           onClick={() => onMarkerClick(apartment)}
+          
           icon={{
-            url:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg_CZw6QoE9pY66dOlNnkmJDgplB4prqrqsDAPvWwR-Q&s',
-            scaledSize: new google.maps.Size(30, 30),
-          }}
+            path:
+              "M8,0C4.688,0,2,2.688,2,6c0,6,6,10,6,10s6-4,6-10C14,2.688,11.312,0,8,0z M8,8C6.344,8,5,6.656,5,5s1.344-3,3-3s3,1.344,3,3 S9.656,8,8,8z" ,
+          scale : 2,
+            }}
         />
       ))}
 
-      {selectedApartment && (
-        <InfoWindow
-          position={{ lat: selectedApartment.lat, lng: selectedApartment.lng }}
-          visible={true} 
-        >
-          <div>
-            <h4>{selectedApartment.name}</h4>
-            {<p> Da collegare con le cards degli appartamenti + descrizione ecc.... </p>}
-          </div>
-        </InfoWindow>
-      )}
-    </Map>
-  );
-};
+{infoWindowVisible && selectedApartment && (
+  <InfoWindow
+    position={{ lat: selectedApartment.lat, lng: selectedApartment.lng }}
+    onCloseClick={() => setInfoWindowVisible(false)}
+  >
+    <div>
+      <h4>{selectedApartment.location}</h4>
+      <p>Days: {selectedApartment.days}</p>
+      <p>Price: {selectedApartment.price}</p>
+      <p>Rating: {selectedApartment.rating}</p>
+      
+    </div>
+  </InfoWindow>
+)}
 
-export default GoogleApiWrapper({
-  apiKey: process.env.GOOGLE_API_KEY,
-})(MapComponent);
+      </GoogleMap>
+    </LoadScript>
+  )
+}
+
+export default React.memo(MapComponent)

@@ -2,13 +2,17 @@ import React, { useState, useEffect,  } from "react";
 import { Container, Grid, Typography, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
 import { styled } from "@mui/system";
 import { grey } from "@mui/material/colors";
-import PersonIcon from "@mui/icons-material/Person";
-import LockIcon from "@mui/icons-material/Lock";
-import EmailIcon from "@mui/icons-material/Email";
 
+import PersonIcon from "@mui/icons-material/Person";
 import userAvatar from "../assets/logo.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
+
+//cards 
+import Pagamenti from "../components/PersonalAreaCards/Pagamenti"
+import AccessoSicurezza from "../components/PersonalAreaCards/AccessoSicurezza"
+import CreditoCoupon from "../components/PersonalAreaCards/CreditoCoupon"
+import Notifiche from "../components/PersonalAreaCards/Notifiche"
 
 
 const PersonalAreaContainer = styled(Container)({
@@ -55,65 +59,87 @@ const DetailIcon = styled("div")({
 });
 
 const PersonalArea = () => {
-  const [openDialog, setOpenDialog] = useState(false);
-  
-  const [userData, setUserData] = useState(null);
+const [openDialog, setOpenDialog] = useState(false);
+const [userData, setUserData] = useState(null);
 
+const [name, setName] = useState("");
+const [surname, setSurname] = useState("");
+const [address, setAddress] = useState("");
+const [phoneNumber, setPhoneNumber] = useState("");
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
+const handleCloseDialog = () => {
+  setOpenDialog(false);
+};
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
+const handleOpenDialog = () => {
+  setSurname("");
+  setName(""); 
+  setAddress("");
+  setPhoneNumber("");
+  setOpenDialog(true); 
+};
 
-  /*const handleSaveChanges = () => {
-    const data = {
-      username: username,
-      password: password,
-      email: email,
-    }; 
+//recupero del token esternamente 
+let TOKEN = localStorage.getItem("token");
 
-    axios
-      .put 
-      ("http://16.171.41.207:3000/api/profile/update", data)
-      .then((response) => {
-        console.log("Risposta dalla richiesta PUT:", response.data);
-        handleCloseDialog();
+const handleSubmit = async () => {
+  try {
+    
+    console.log(TOKEN)
+    const response = await axios.put(
+      "http://16.171.41.207:3000/api/profile/update",
+      {
+        name,
+        surname,
+        address,
+        phoneNumber,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      }
+    
+    );
 
-        localStorage.setItem("token", response.data.token);
-      })
-      .catch((error) => {
-        console.error("Errore durante la richiesta PUT:", error);
-      });
-  };
+    // Aggiorna il valore dell'email nel tuo stato locale
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+      name,
+      surname,
+      address,
+      phoneNumber,
+    }));
 
-  */
-
+    handleCloseDialog();
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
+       
         const response = await axios.get("http://16.171.41.207:3000/api/profile", {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${TOKEN}`,
+            
           },
         });
         setUserData(response.data);
+        console.log(response.data.name)
+        
       } catch (error) {
         console.log(error);
       }
     };
-  
+ 
     fetchData();
   }, []);
   
-  console.log(userData)
   
-  
-
   return (
     <PersonalAreaContainer>
       <Typography variant="h1" align="center" gutterBottom>
@@ -125,33 +151,112 @@ const PersonalArea = () => {
           <Avatar src={userAvatar} alt="User Avatar" />
         </ProfileAvatar>
         <ProfileDetails>
-          <ProfileDetailItem>
-            <DetailIcon>
-              <PersonIcon fontSize="small" />
-            </DetailIcon>
-            <Typography variant="body1">Username: {/* */}</Typography>
-          </ProfileDetailItem>
-          <ProfileDetailItem>
-            <DetailIcon>
-              <LockIcon fontSize="small" />
-            </DetailIcon>
-            <Typography variant="body1">Password: ********</Typography>
-          </ProfileDetailItem>
-          <ProfileDetailItem>
-            <DetailIcon>
-              <EmailIcon fontSize="small" />
-            </DetailIcon>
-            <Typography variant="body1">Email: {userData != null && userData.email}</Typography>
-          </ProfileDetailItem>
+
+
+        <ProfileDetailItem>
+
+  <DetailIcon>
+    <PersonIcon fontSize="small" />
+  </DetailIcon>
+  <Typography variant="body1">Name: {userData?.profile?.name || "N/A" }</Typography>  
+</ProfileDetailItem>
+
+<ProfileDetailItem>
+  <Typography variant="body1">Surname: {userData?.profile?.surname || "N/A" }</Typography>
+</ProfileDetailItem>
+
+<ProfileDetailItem>
+  <Typography variant="body1">Address: {userData?.profile?.address || "N/A" }</Typography>
+</ProfileDetailItem>
+
+<ProfileDetailItem>
+  <Typography variant="body1">Phone Number: {userData?.profile?.phoneNumber || "N/A"}</Typography>
+</ProfileDetailItem>
+
+
         </ProfileDetails>
       </ProfileSection>
-      <SectionTitle>Azioni account</SectionTitle>
-      <Grid container justifyContent="center" spacing={2}>
+
+      <SectionTitle> Area riservata </SectionTitle>
+
+      <Grid container justifyContent="center" spacing={8}>
+             
+        <Grid item>
+        {<Pagamenti />}
+        </Grid>
+
+       
+         <Grid item>
+          {<AccessoSicurezza/>}
+        </Grid>
+
+      
+        <Grid item>
+            {<  CreditoCoupon />}
+        </Grid>
+
+        <Grid item >
+            {<Notifiche />}
+        </Grid>
+        
+        </Grid > 
+
+
+      <Grid container justifyContent="center" spacing={2}  marginTop={"50px"}>
+      <Grid item>
+        <Link to={"/mappa"}> 
+          <Button variant="contained" size="large" >
+            Apri la mappa per visualizzare gli appartamenti 
+          </Button>
+          </Link>
+        </Grid>
+
         <Grid item>
           <Button variant="contained" size="large" onClick={handleOpenDialog}>
             Modifica le tue credenziali
           </Button>
         </Grid>
+
+        <Dialog open={openDialog}   onClose={handleCloseDialog}>
+  <DialogTitle>Modifica le tue credenziali</DialogTitle>
+  <DialogContent>
+    <TextField
+      label="Name"
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+      fullWidth
+      margin="normal"
+    />
+
+<TextField
+      label="Surame"
+      value={surname}
+      onChange={(e) => setSurname(e.target.value)}
+      fullWidth
+      margin="normal"
+    />
+
+    <TextField
+      label="Address"
+      value={address}
+      onChange={(e) => setAddress(e.target.value)}
+      fullWidth
+      margin="normal"
+    />
+    <TextField
+      label="PhoneNumber"
+      value={phoneNumber}
+      onChange={(e) => setPhoneNumber(e.target.value)}
+      fullWidth
+      margin="normal"
+    />
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleSubmit}>Salva</Button>
+    <Button onClick={handleCloseDialog}>Annulla</Button>
+  </DialogActions>
+</Dialog>
+
         <Grid item>
         <Link to="/" style={{ textDecoration: "none" }}>
           <Button variant="contained" size="large">
@@ -160,40 +265,7 @@ const PersonalArea = () => {
           </Link>
         </Grid>
       </Grid>
-
-      {/* Pop-up per la modifica */} 
-      {/* <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Modifica credenziali</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Annulla</Button>
-          <Button onClick={handleSaveChanges} color="primary">
-            Salva
-          </Button>
-        </DialogActions>
-      </Dialog> */}
+     
     </PersonalAreaContainer>
   );
 };

@@ -6,9 +6,8 @@ import CarouselCard from "./CarouselCard/CarouselCard";
 
 import axios from "axios";
 
-
 const Locationcards = () => {
-  const [data, setData] = useState([]);
+const [data, setData] = useState([]);
 
   async function getCards() {
     try {

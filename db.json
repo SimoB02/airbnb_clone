@@ -504,5 +504,76 @@
       "isNew": false,
       "rating": 4.5
     }
-  ]
-}
+  ],
+  
+    "Mock": [
+      {
+        "id": 1,
+        "locationImages": [
+          {
+            "id": 1,
+            "url": "https://images.unsplash.com/photo-1600240644455-3edc55c375fe?auto=format&fit=crop&w=400&h=250&q=60"
+          },
+          {
+            "id": 2,
+            "url": "https://images.unsplash.com/photo-1653408400816-af6dba0c9432?auto=format&fit=crop&w=400&h=250&q=60"
+          }
+        ],
+        "location": "Gardon Reveira, Italy",
+        "days": "Oct 2-9",
+        "price": "$14,999 CAD night",
+        "isNew": true,
+        "rating": 4.5,
+        "lat": 41.8719,
+        "lng": 12.5674
+      },
+      {
+        "id": 2,
+        "locationImages": [
+          {
+            "id": 1,
+            "url": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=400&h=250&q=60"
+          },
+          {
+            "id": 2,
+            "url": "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=400&h=250&q=60"
+          }
+        ],
+        "location": "Joshua tree, USA",
+        "days": "Sep 2-11",
+        "price": "$3000 CAD night",
+        "isNew": false,
+        "rating": 4.99,
+        "lat": 34.1342,
+        "lng": -116.3136
+      },
+      {
+        "id": 3,
+        "locationImages": [
+          {
+            "id": 1,
+            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=400&h=250&q=60"
+          },
+          {
+            "id": 2,
+            "url": "https://images.unsplash.com/photo-1586348943529-beaae6c28db9?auto=format&fit=crop&w=400&h=250&q=60"
+          },
+          {
+            "id": 3,
+            "url": "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=400&h=250&q=80"
+          },
+          {
+            "id": 4,
+            "url": "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=400&h=250&q=60"
+          }
+        ],
+        "location": "Uvita rosa, Costa Rica",
+        "days": "Nov 19-22",
+        "price": "$1,129 CAD night",
+        "isNew": true,
+        "rating": 4.6,
+        "lat": 9.1519,
+        "lng": -83.745
+      }
+    ]
+  }
