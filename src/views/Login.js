@@ -45,7 +45,7 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://16.171.41.207:3000/api/user/login",
+        "http://16.170.235.124:3000/api/user/login",
         data
       );
 

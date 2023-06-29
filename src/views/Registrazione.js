@@ -24,7 +24,7 @@ const Form = styled("form")({
   borderRadius: "4px",
   backgroundColor: "#f5f5f5",
 });
- 
+
 const Registrazione = () => {
   const {
     register,
@@ -55,7 +55,7 @@ const Registrazione = () => {
   
   const postData = async () => {
     try {
-      const response = await axios.post("http://16.171.41.207:3000/api/user/authy/"+ link);
+      const response = await axios.post("http://16.170.235.124:3000/api/user/authy/"+ link);
       console.log(registrationSuccess);
       return response.data 
       

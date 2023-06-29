@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter,  Routes, Route } from "react-router-dom";
-//import ProtectedRoute from "./utils/ProtectedRoute";   
+import ProtectedRoute from "./utils/ProtectedRoute";   
 import {PersonalArea, Registrazione, Homepage, LoginForm } from './views'
 
 import GestioneNotifiche from "./views/GestioneNotifiche"
@@ -24,9 +24,9 @@ function App() {
                  {
           <Route path="/AreaPersonale" element={
 
-      /*    <ProtectedRoute>  */
+         <ProtectedRoute>  
           <PersonalArea />
-      /*    </ProtectedRoute>  */  }> </Route>
+          </ProtectedRoute>   }> </Route>
           }
 
 

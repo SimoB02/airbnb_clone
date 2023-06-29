@@ -87,7 +87,7 @@ const handleSubmit = async () => {
     
     console.log(TOKEN)
     const response = await axios.put(
-      "http://16.171.41.207:3000/api/profile/update",
+      "http://16.170.235.124:3000/api/profile/update",
       {
         name,
         surname,
@@ -122,7 +122,7 @@ const handleSubmit = async () => {
       try {
         const token = localStorage.getItem("token");
        
-        const response = await axios.get("http://16.171.41.207:3000/api/profile", {
+        const response = await axios.get("http://16.170.235.124:3000/api/profile", {
           headers: {
             Authorization: `Bearer ${TOKEN}`,
             
